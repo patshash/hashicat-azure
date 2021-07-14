@@ -5,6 +5,19 @@ terraform {
       version = "=2.60.0"
     }
   }
+  #  backend "azurerm" {
+  # resource_group_name = "pcarey-resources"
+  # storage_account_name = "pcareytfestorage"
+  # container_name = "tfcontainer"
+    # key = "prod.terraform.tfstate"
+    #}
+  backend "remote" {
+    organization = "pcarey-org"
+
+    workspaces {
+      name = "migrate-hashicat-azure"
+    }
+  }
 }
 
 provider "azurerm" {
