@@ -1,4 +1,5 @@
- terraform {
+/*
+terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -183,3 +184,4 @@ resource "null_resource" "configure-cat-app" {
     }
   }
 }
+*/
