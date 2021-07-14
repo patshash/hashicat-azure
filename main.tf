@@ -1,4 +1,4 @@
-/*
+
 terraform {
   required_providers {
     azurerm = {
@@ -20,7 +20,7 @@ resource "azurerm_resource_group" "myresourcegroup" {
     environment = "Production"
   }
 }
-
+/*
 resource "azurerm_virtual_network" "vnet" {
   name                = "${var.prefix}-vnet"
   location            = azurerm_resource_group.myresourcegroup.location
