@@ -1,21 +1,8 @@
-terraform {
+ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
       version = "=2.60.0"
-    }
-  }
-  #  backend "azurerm" {
-  # resource_group_name = "pcarey-resources"
-  # storage_account_name = "pcareytfestorage"
-  # container_name = "tfcontainer"
-    # key = "prod.terraform.tfstate"
-    #}
-  backend "remote" {
-    organization = "pcarey-org"
-
-    workspaces {
-      name = "migrate-hashicat-azure"
     }
   }
 }
@@ -150,33 +137,14 @@ resource "azurerm_virtual_machine" "catapp" {
 
   tags = {}
 
-  # Added to allow destroy to work correctly.
   depends_on = [azurerm_network_interface_security_group_association.catapp-nic-sg-ass]
 }
 
-# We're using a little trick here so we can run the provisioner without
-# destroying the VM. Do not do this in production.
-
-# If you need ongoing management (Day N) of your virtual machines a tool such
-# as Chef or Puppet is a better choice. These tools track the state of
-# individual files and can keep them in the correct configuration.
-
-# Here we do the following steps:
-# Sync everything in files/ to the remote VM.
-# Set up some environment variables for our script.
-# Add execute permissions to our scripts.
-# Run the deploy_app.sh script.
 resource "null_resource" "configure-cat-app" {
   depends_on = [
     azurerm_virtual_machine.catapp,
   ]
 
-  # Terraform 0.11
-  # triggers {
-  #   build_number = "${timestamp()}"
-  # }
-
-  # Terraform 0.12
   triggers = {
     build_number = timestamp()
   }
