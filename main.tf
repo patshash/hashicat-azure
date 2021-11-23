@@ -136,7 +136,7 @@ resource "azurerm_virtual_machine" "catapp" {
   }
 
   tags = {
-    person = "patrick" 
+    person = "patrick2" 
   }
 
   # Added to allow destroy to work correctly.
