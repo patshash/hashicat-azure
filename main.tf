@@ -1,3 +1,4 @@
+
 terraform {
   required_providers {
     azurerm = {
@@ -59,18 +60,6 @@ resource "azurerm_network_security_group" "catapp-sg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "443"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "SSH"
-    priority                   = 101
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "22"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
@@ -139,33 +128,14 @@ resource "azurerm_virtual_machine" "catapp" {
     person = "patrick2" 
   }
 
-  # Added to allow destroy to work correctly.
   depends_on = [azurerm_network_interface_security_group_association.catapp-nic-sg-ass]
 }
 
-# We're using a little trick here so we can run the provisioner without
-# destroying the VM. Do not do this in production.
-
-# If you need ongoing management (Day N) of your virtual machines a tool such
-# as Chef or Puppet is a better choice. These tools track the state of
-# individual files and can keep them in the correct configuration.
-
-# Here we do the following steps:
-# Sync everything in files/ to the remote VM.
-# Set up some environment variables for our script.
-# Add execute permissions to our scripts.
-# Run the deploy_app.sh script.
 resource "null_resource" "configure-cat-app" {
   depends_on = [
     azurerm_virtual_machine.catapp,
   ]
 
-  # Terraform 0.11
-  # triggers {
-  #   build_number = "${timestamp()}"
-  # }
-
-  # Terraform 0.12
   triggers = {
     build_number = timestamp()
   }
@@ -204,3 +174,4 @@ resource "null_resource" "configure-cat-app" {
     }
   }
 }
+
